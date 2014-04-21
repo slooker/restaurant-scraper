@@ -13,6 +13,9 @@ RestaurantInspections::Application.routes.draw do
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+ 
+  get '/restaurants/:id/violations' => 'restaurants#violations'
+  get '/restaurants/:id/inspections' => 'restaurants#inspections'
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

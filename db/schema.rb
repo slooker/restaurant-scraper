@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20140420061532) do
     t.datetime "updated_at"
   end
 
-  add_index "inspections", ["inspection_id"], name: "index_inspections_on_inspection_id", unique: true
+  add_index "inspections", ["inspection_id"], name: "index_inspections_on_inspection_id", unique: true, using: :btree
 
   create_table "inspections_violations", force: true do |t|
     t.integer "inspection_id"
@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(version: 20140420061532) do
     t.datetime "updated_at"
   end
 
-  add_index "restaurants", ["permit_id"], name: "index_restaurants_on_permit_id", unique: true
-  add_index "restaurants", ["permit_number"], name: "index_restaurants_on_permit_number", unique: true
+  add_index "restaurants", ["permit_id"], name: "index_restaurants_on_permit_id", unique: true, using: :btree
+  add_index "restaurants", ["permit_number"], name: "index_restaurants_on_permit_number", unique: true, using: :btree
 
   create_table "violations", force: true do |t|
     t.string   "code"
