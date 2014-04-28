@@ -15,6 +15,11 @@ class InspectionsController < ApplicationController
     render json: @inspection
   end
 
+  def violations
+    inspection = Inspection.find(params[:id])
+    render json: inspection.violations
+  end
+
   # POST /inspections
   # POST /inspections.json
 #  def create

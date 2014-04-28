@@ -17,6 +17,12 @@ RestaurantInspections::Application.routes.draw do
   get '/restaurants/:id/violations' => 'restaurants#violations'
   get '/restaurants/:id/inspections' => 'restaurants#inspections'
 
+  get '/inspections/:id/violations' => 'inspections#violations'
+
+  get '/lat/:lat/long/:long' => 'restaurants#get_restaurants_within_x', :constraints => { :lat => /[0-9\-\.]+/, :long => /[0-9\-\.]+/ }
+  get '/lat/:lat/long/:long/range/:range' => 'restaurants#get_restaurants_within_x', :constraints => { :lat => /[0-9\-\.]+/, :long => /[0-9\-\.]+/ }
+
+
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

@@ -1,10 +1,11 @@
 class RestaurantsController < ApplicationController
+  require 'pp'
   # GET /restaurants
   # GET /restaurants.json
   def index
     ## We don't ever want to show all restaurants.
-    #@restaurants = Restaurant.all
-    @restaurants = Restaurant.first
+    @restaurants = Restaurant.all
+    #@restaurants = Restaurant.first
 
     render json: @restaurants
   end
@@ -32,6 +33,26 @@ class RestaurantsController < ApplicationController
   end
 
   def get_restaurants_within_x
+    lat = params[:lat]
+    long = params[:long]
+    range = params[:range] || 1
+
+    sql_params = [ lat, long ]
+
+#    restaurants = Restaurant.select("name, address, current_grade, SQRT(
+#      POW(69.1 * (latitude - :orig_lat), 2) +
+#      POW(69.1 * (:orig_lon - longitude) * COS(latitude / 57.3), 2)) AS distance", sql_params)
+#      .having("distance < 1")
+#      .order('distance')
+#      .limit(50)
+    restaurants = Restaurant.within(1, :origin => [lat, long]).limit(50)
+
+
+  render json: restaurants
+
+
+
+
     ## Get restaurants within X distance
     #
     ## Need current lat/long and distance to look through
@@ -48,7 +69,7 @@ class RestaurantsController < ApplicationController
 #        POW(69.1 * (@orig_lon - longitude) * COS(latitude / 57.3), 2)) AS distance
 #        FROM restaurants HAVING distance < 1 ORDER BY distance;
 #        desc restaurants;
-
+#
   end
 
 
