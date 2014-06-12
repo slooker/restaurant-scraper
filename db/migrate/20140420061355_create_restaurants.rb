@@ -9,11 +9,11 @@ class CreateRestaurants < ActiveRecord::Migration
       t.string :longitude
       t.string :city
       t.string :zip
-      t.string :current_grade
+#      t.string :current_grade
       t.string :category
-      t.datetime :current_inspection_date
-      t.string :current_inspection_type
-      t.integer :demerits
+#      t.datetime :current_inspection_date
+#      t.string :current_inspection_type
+#      t.integer :demerits
       t.timestamps
     end
       add_index :restaurants, :permit_number, :unique => true

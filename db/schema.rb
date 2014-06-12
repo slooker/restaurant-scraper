@@ -42,11 +42,7 @@ ActiveRecord::Schema.define(version: 20140420061532) do
     t.string   "longitude"
     t.string   "city"
     t.string   "zip"
-    t.string   "current_grade"
     t.string   "category"
-    t.datetime "current_inspection_date"
-    t.string   "current_inspection_type"
-    t.integer  "demerits"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

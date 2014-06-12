@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="/js/handlebars-v1.3.0.js"></script>
+    <script>
+      // this isn't working
+      $('.restaurant').on('click', function(e) {
+        alert("TEST");
+        alert($(this).id);
+        e.preventDefault();
+      });
+
+        // This is working but is totally ghetto
+      function clickRestaurant(id) {
+        $.get('http://www.codeforvegas.org:3000/restaurants/'+id+'/all', function(r) {
+          var template = detailTemplate(r);
+          $('#restaurants').html(template);
+        });
+      }
+
+      function detailTemplate(r) {
+        var html = $('#detailTemplate').html();
+
+        var context = {inspection: r.current_inspection, violations: r.violations, restaurant: r.restaurant };
+        console.log(JSON.stringify(context));
+        console.log(context);
+        var template = Handlebars.compile(html);
+        return template(context);
+      }
+
+      function urlTemplate(id, name) {
+        var html = "<a href='javascript:clickRestaurant({{id}})' id='{{id}}' class='restaurant'>{{name}}</a><br />";
+
+        var context = {id: id, name: name};
+        var template = Handlebars.compile(html);
+        return template(context);
+      }
+
+      $(document).ready(function() {
+        // Try HTML5 geolocation
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            $.get( 'http://www.codeforvegas.org:3000/lat/'+lat+'/long/'+lng+'?exclusions=Special%20Kitchen,Caterer,Main%20Kitchen,Meat/Poultry/Seafood,Pantry,Banquet%20Kitchen,Produce%20Market,Garde%20Manger,Elementary%20School%20Kitchen,Institutional%20Food%20Service,Grocery%20Store%20Sampling,Vegetable%20Prep', function(data) {
+              var rdiv = $('#restaurants');
+              rdiv.html("");
+              for (var i = 0;  i < data.length; i++) {
+                r = data[i];
+                var html = "<a href='javascript:void(0)' id='"+r.id+"' class='restaurant'>"+r.name+"</a><br />"
+                html = "<a href='javascript:clickRestaurant("+r.id+")' id='"+r.id+"' class='restaurant'>"+r.name+"</a><br />"
+                html = urlTemplate(r.id, r.name);
+                rdiv.append(html);
+              }
+            });
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleNoGeolocation(false);
+        }
+      });
+
+      function handleNoGeolocation(errorFlag) {
+        if (errorFlag) {
+          alert('Error: The Geolocation service failed.');
+        } else {
+            alert("Error: Your browser doesn't support geolocation.");
+        }
+      }
+    </script>
+
+    <style>
+      #detailTemplate { display: none; }
+    </style>
+  </head>
+  <body>
+    <script type="text/x-handlebars-template" id="detailTemplate">
+      <a href="/list.html">Back</a>
+      <h3>{{restaurant.name}}</h3>
+      {{#if inspection}}
+      <table>
+        <tr>
+          <td>Inspection Date:</td>
+          <td>{{inspection.date}}</td>
+        </tr>
+        <tr>
+          <td>Current Grade:</td>
+          <td>{{inspection.grade}}</td>
+        </tr>
+        {{#if violations}}
+        <tr>
+          <td>Demerits</td>
+          <td>Violation</td>
+        </tr>
+        {{#each violations}}
+        <tr>
+          <td>{{demerits}}</td>
+          <td>{{description}}</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan=2><h4>No violations</h4></td>
+        </tr>
+        {{/if}}
+      </table>
+
+      {{else}}
+      <h4>No inspections on record</h4>
+      {{/if}}
+
+    </script>
+    <div id="restaurants">... Fetching Data ...</div>
+
+
+<!-- At the bottom, so page loads faster -->
+  </body>
+</html>
+
+

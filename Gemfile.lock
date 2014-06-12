@@ -34,6 +34,7 @@ GEM
       geokit (~> 1.5)
       rails (>= 3.0)
     hike (1.2.3)
+    htmlentities (4.3.1)
     i18n (0.6.9)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -85,6 +86,7 @@ PLATFORMS
 
 DEPENDENCIES
   geokit-rails
+  htmlentities
   mysql
   rails (= 4.0.2)
   rails-api

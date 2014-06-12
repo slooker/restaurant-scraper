@@ -14,6 +14,7 @@ end
 def get_all_restaurants 
   total = 1
   limit = 500 ## Normally its 500
+#  limit = 1   ## Normally its 500
   base_url = "http://www.southernnevadahealthdistrict.org/restaurants/stores/restaurants.php?reload=true&category_id=0&search_type=contains&restaurant_hotel=&restaurant_name=&restaurant_address=&current_grade=Z&restaurant_city=0&restaurant_zipcode=&limit=#{limit}"
   start = 0
   @increment = 500
@@ -36,6 +37,7 @@ def get_all_restaurants
 
     ## Fix their json and get a json object back
     realJson = get_real_json(jsonish)
+    #pp realJson
 
     if (total_runs == 1)
       ## Gets  actual total runs.  Uncomment this for live
@@ -44,6 +46,7 @@ def get_all_restaurants
 
     realJson['restaurants'].each do |r|
       rn = Restaurant.where(permit_id: r['permit_id']).first_or_create
+      pp rn
       rn.update_attributes!(
         #:permit_id => r['permit_id'],
         :permit_number => r['permit_number'],
@@ -53,11 +56,11 @@ def get_all_restaurants
         :longitude => r['longitude'],
         :city => r['city_name'],
         :zip => r['zip_code'],
-        :current_grade => r['current_grade'],
+        #:current_grade => r['current_grade'],
         :category => r['category_name'],
-        :current_inspection_type => r['insp_type'],
-        :current_inspection_date => r['date_current'],
-        :demerits => r['demerits']
+        #:current_inspection_type => r['insp_type'],
+        #:current_inspection_date => r['date_current'],
+        #:demerits => r['demerits']
       )
 
       old_inspection = false
@@ -88,6 +91,8 @@ def get_all_restaurants
           end
         end
         rn.save
+        #pp rn.inspections.order('date desc').first
+#        pp rn
       end
     end
   end
@@ -111,6 +116,7 @@ def get_real_json(json_string)
   ## Fix their screwed up 'json'
   json_string["total:"]= "\"total\":"
   json_string["restaurants:"]= "\"restaurants\":"
+  json_string["\\"] = ""
 
   return JSON.parse(json_string)
 end
