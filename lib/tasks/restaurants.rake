@@ -16,6 +16,7 @@ def get_all_restaurants
   limit = 500 ## Normally its 500
 #  limit = 1   ## Normally its 500
   base_url = "http://www.southernnevadahealthdistrict.org/restaurants/stores/restaurants.php?reload=true&category_id=0&search_type=contains&restaurant_hotel=&restaurant_name=&restaurant_address=&current_grade=Z&restaurant_city=0&restaurant_zipcode=&limit=#{limit}"
+  #base_url = 'http://www.southernnevadahealthdistrict.org/restaurants/stores/restaurants.php?start=465&limit=1'
   start = 0
   @increment = 500
   #@increment = 5
@@ -28,9 +29,8 @@ def get_all_restaurants
     i += 1
   
     ## Generate the URL
-    current_url = "#{base_url}&start=#{start}"
-    #puts current_url
-    #puts "start: #{start}, i: #{i}, total: #{total_runs}"
+    current_url = base_url
+    #current_url = "#{base_url}&start=#{start}"
   
     ## Fetch the data
     jsonish = fetch_url(current_url)
@@ -46,7 +46,7 @@ def get_all_restaurants
 
     realJson['restaurants'].each do |r|
       rn = Restaurant.where(permit_id: r['permit_id']).first_or_create
-      pp rn
+      #pp rn
       rn.update_attributes!(
         #:permit_id => r['permit_id'],
         :permit_number => r['permit_number'],
@@ -63,9 +63,9 @@ def get_all_restaurants
         #:demerits => r['demerits']
       )
 
-      old_inspection = false
       r['prev_insp'].each do |i|
-        if !Inspection.where(inspection_id: i['inspection_id']).first
+        insp = Inspection.where(inspection_id: i['inspection_id']).first
+        if !insp
           #puts "Name: #{insp.class.name}"
           insp = Inspection.create(
             inspection_id: i['inspection_id'],
@@ -76,20 +76,27 @@ def get_all_restaurants
             inspection_type: i['inspection_type'],
             permit_status: i['permit_status']
           )
+        end
 
-          if i['violations'] and !old_inspection
+        pp i['violations']
+          if i['violations']
             vArray = i['violations'].split(',')
             #puts "looping over violations"
             vArray.each do |vi|
               #puts "Violation id: #{vi}"
               v = Violation.find_by_id(vi)
+
+              ## IF this fails, it throws an exception
+              begin
+                violation = insp.violations.find(v.id)
+              rescue
+                insp.violations << v
+              end
               #pp v
-              insp.violations << v
             end
             insp.save
             rn.inspections << insp
           end
-        end
         rn.save
         #pp rn.inspections.order('date desc').first
 #        pp rn

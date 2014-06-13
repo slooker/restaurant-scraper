@@ -12,7 +12,7 @@
 
         // This is working but is totally ghetto
       function clickRestaurant(id) {
-        $.get('http://www.codeforvegas.org:3000/restaurants/'+id+'/all', function(r) {
+        $.get('http://www.codeforvegas.org:3000/restaurants/'+id+'/all', 'jsonp', function(r) {
           var template = detailTemplate(r);
           $('#restaurants').html(template);
         });
@@ -42,7 +42,7 @@
           navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
-            $.get( 'http://www.codeforvegas.org:3000/lat/'+lat+'/long/'+lng+'?exclusions=Special%20Kitchen,Caterer,Main%20Kitchen,Meat/Poultry/Seafood,Pantry,Banquet%20Kitchen,Produce%20Market,Garde%20Manger,Elementary%20School%20Kitchen,Institutional%20Food%20Service,Grocery%20Store%20Sampling,Vegetable%20Prep', function(data) {
+            $.get( 'http://www.codeforvegas.org:3000/lat/'+lat+'/long/'+lng+'?exclusions=Special%20Kitchen,Caterer,Main%20Kitchen,Meat/Poultry/Seafood,Pantry,Banquet%20Kitchen,Produce%20Market,Garde%20Manger,Elementary%20School%20Kitchen,Institutional%20Food%20Service,Grocery%20Store%20Sampling,Vegetable%20Prep', 'jsonp', function(data) {
               var rdiv = $('#restaurants');
               rdiv.html("");
               for (var i = 0;  i < data.length; i++) {

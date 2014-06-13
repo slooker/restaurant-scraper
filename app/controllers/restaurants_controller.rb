@@ -35,19 +35,15 @@ class RestaurantsController < ApplicationController
   def all 
     restaurant = Restaurant.find(params[:id])
     inspection = restaurant.inspections.order('date desc').first
+    violations = []
     if (inspection) 
-      violations = []
       if (inspection.violations) 
-        restaurant.inspections.order('date desc').first.violations = violations
+        violations = restaurant.inspections.order('date desc').first.violations
       end
     end
 
-
     response = { :restaurant => restaurant, :current_inspection => inspection, :violations => violations }
-
     render json: response
-
-    
   end
 
   def inspections
