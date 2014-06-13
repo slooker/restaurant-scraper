@@ -2,6 +2,7 @@
   <head>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="/js/handlebars-v1.3.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css">
     <script>
       // this isn't working
       $('.restaurant').on('click', function(e) {
@@ -12,7 +13,7 @@
 
         // This is working but is totally ghetto
       function clickRestaurant(id) {
-        $.get('http://www.codeforvegas.org:3000/restaurants/'+id+'/all', 'jsonp', function(r) {
+        $.get('/restaurants/'+id+'/all', 'jsonp', function(r) {
           var template = detailTemplate(r);
           $('#restaurants').html(template);
         });
@@ -42,7 +43,7 @@
           navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
-            $.get( 'http://www.codeforvegas.org:3000/lat/'+lat+'/long/'+lng+'?exclusions=Special%20Kitchen,Caterer,Main%20Kitchen,Meat/Poultry/Seafood,Pantry,Banquet%20Kitchen,Produce%20Market,Garde%20Manger,Elementary%20School%20Kitchen,Institutional%20Food%20Service,Grocery%20Store%20Sampling,Vegetable%20Prep', 'jsonp', function(data) {
+            $.get( '/lat/'+lat+'/long/'+lng+'?exclusions=Special%20Kitchen,Caterer,Main%20Kitchen,Meat/Poultry/Seafood,Pantry,Banquet%20Kitchen,Produce%20Market,Garde%20Manger,Elementary%20School%20Kitchen,Institutional%20Food%20Service,Grocery%20Store%20Sampling,Vegetable%20Prep', 'jsonp', function(data) {
               var rdiv = $('#restaurants');
               rdiv.html("");
               for (var i = 0;  i < data.length; i++) {
